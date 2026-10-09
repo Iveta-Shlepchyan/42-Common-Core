@@ -1,10 +1,27 @@
 #include <stdio.h>
 #include "ft_printf.h"
 
+void	int_to_hex(int n)
+{
+	char digits[] = "0123456789ABCDEF";
+
+	
+	if (n / 16 > 0)
+	{
+		ft_putchar_fd(digits[n % 16], 1);
+		n /= 16;
+	}
+	ft_putchar_fd(digits[n % 16], 1);
+	//reverse the result I can make it to return string or smth 
+}
+
 int	main(void)
 {
 	int a = 42;
 	int *y = &a;
+	
+	int_to_hex(108);
+	ft_printf("\n");
 	
 	ft_printf("MY FUNC Age: %i, Score: %d\n", 25, 45);
 	ft_printf("MY FUNC Age: %u, Score: %d\n", -25, 10);
@@ -29,3 +46,5 @@ int	main(void)
 	printf("Pointer: %p\n", y);//basicaly same as hex
 	
 }
+
+
