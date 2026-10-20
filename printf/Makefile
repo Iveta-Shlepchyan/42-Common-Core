@@ -6,7 +6,7 @@
 #    By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/10/08 17:57:52 by ishlepch          #+#    #+#              #
-#    Updated: 2026/10/08 17:57:56 by ishlepch         ###   ########.fr        #
+#    Updated: 2026/10/17 02:59:06 by ishlepch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,13 @@ RM      = rm -f
 AR      = ar rcs
 
 # Source files
-SRCS    = ft_printf.c
+SRCS    = ft_printf.c \
+          ft_printf_utils.c \
+          ft_format_parser.c \
+          ft_char_str_formatter.c \
+          ft_int_formatter.c \
+          ft_hex_formatter.c \
+          ft_pointer_formatter.c
 
 # Object files (automatically maps .c to .o)
 OBJS    = $(SRCS:.c=.o)
@@ -34,6 +40,8 @@ LIBFT     = $(LIBFT_DIR)/libft.a
 
 # Default rule
 all: $(NAME)
+
+bonus: all
 
 # Rules to create the library
 $(NAME): $(LIBFT) $(OBJS)
@@ -61,4 +69,4 @@ fclean: clean
 re: fclean all
 
 # Prevent conflicts with files named all, clean, fclean, re
-.PHONY: all clean fclean re
+.PHONY: all bonus clean fclean re

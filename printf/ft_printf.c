@@ -6,63 +6,57 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/08 18:01:29 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/10/08 18:01:30 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/10/16 18:01:58 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "ft_printf.h"
-//or make it long (problem long *-1 but in this case for unsigned int it will be fine)
-void	ft_putnbr_unsigned(unsigned int n, int fd)
-{
-	long	l;
 
-	l = n;
-	if (l < 0)
-	{
-		ft_putchar_fd('-', fd);
-		l *= -1;
-	}
-	if (l > 9)
-		ft_putnbr_fd(l / 10, fd);
-	ft_putchar_fd(l % 10 + '0', fd);
-}
+#include "ft_printf.h"
 
 int	ft_printf(const char *str, ...)
 {
-	va_list argptr;
-	va_start(argptr, str);
-	int	i;
-	int	a_i;
+	va_list		argptr;
+	t_format	format;
+	int			i;
+	int			count;
 
 	i = 0;
-	a_i = 0;
+	count = 0;
+	va_start(argptr, str);
 	while (str[i])
 	{
 		if (str[i] == '%')
 		{
-			if (str[i+1] == 'c')
-				ft_putchar_fd((char)va_arg(argptr, int), 1);
-			else if (str[i+1] == 's')
-				ft_putstr_fd(va_arg(argptr, char*), 1);
-			else if (str[i+1] == '%')
-				ft_putchar_fd('%', 1);
-			else if (str[i+1] == 'd' || str[i+1] == 'i')
-				ft_putnbr_fd(va_arg(argptr, int), 1);
-			else if (str[i+1] == 'u')
-				ft_putnbr_unsigned(va_arg(argptr, unsigned int), 1);
-				
-			a_i++;
-			i += 2; 
+			format = parse_format(str, &i);
+			count += print_formated(format, argptr);
 		}
 		else
 		{
 			ft_putchar_fd(str[i], 1);
 			i++;
+			count++;
 		}
-		
 	}
 	va_end(argptr);
-	return (0);
+	return (count);
 }
 
-
-
+int	print_formated(t_format format, va_list argptr)
+{
+	if (format.specifier == 'c')
+		return (print_char_formated(argptr, format));
+	else if (format.specifier == 's')
+		return (print_str_formated(argptr, format));
+	else if (format.specifier == 'd' || format.specifier == 'i'
+		|| format.specifier == 'u')
+		return (print_int_formated(argptr, format));
+	else if (format.specifier == 'x' || format.specifier == 'X')
+		return (print_hex_formated(argptr, format));
+	else if (format.specifier == 'p')
+		return (print_pointer_formated(argptr, format));
+	else if (format.specifier == '%')
+	{
+		ft_putchar_fd('%', 1);
+		return (1);
+	}
+	return (0);
+}
