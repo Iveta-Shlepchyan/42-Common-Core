@@ -6,12 +6,11 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/23 17:28:56 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/23 17:31:38 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:41:16 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
 
 void	rra(t_stack **a, t_config *config)
 {
@@ -40,4 +39,3 @@ void	rrr(t_stack **a, t_stack **b, t_config *config)
 	config->ops[RRR]++;
 	ft_putstr_fd("rrr\n", 1);
 }
-

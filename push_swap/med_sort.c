@@ -6,7 +6,7 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/24 23:44:37 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 22:10:30 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:40:35 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ static int	chunk_count(int n)
 	return (11);
 }
 
-
-static void	push_chunks_to_b(t_stack **a, t_stack **b, int chunk, t_config *config)
+static void	push_chunks_to_b(t_stack **a, t_stack **b, int chunk, t_config *cf)
 {
 	int	pushed;
 
@@ -46,17 +45,17 @@ static void	push_chunks_to_b(t_stack **a, t_stack **b, int chunk, t_config *conf
 	{
 		if ((*a)->index <= pushed)
 		{
-			pb(a, b, config);
-			rb(b, config);
+			pb(a, b, cf);
+			rb(b, cf);
 			pushed++;
 		}
 		else if ((*a)->index <= pushed + chunk)
 		{
-			pb(a, b, config);
+			pb(a, b, cf);
 			pushed++;
 		}
 		else
-			ra(a, config);
+			ra(a, cf);
 	}
 }
 

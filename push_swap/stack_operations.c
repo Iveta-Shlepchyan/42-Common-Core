@@ -6,7 +6,7 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 19:26:14 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 19:26:32 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:48:44 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	swap(t_stack **stack)
 
 	if (!stack || !*stack || !(*stack)->next)
 		return (0);
-
 	temp = *stack;
 	*stack = (*stack)->next;
 	temp->next = (*stack)->next;
@@ -39,14 +38,12 @@ int	swap(t_stack **stack)
 	return (1);
 }
 
-
 int	rotate(t_stack **stack)
 {
 	t_stack	*first;
 
 	if (!stack || !*stack || !(*stack)->next)
 		return (0);
-
 	first = *stack;
 	while ((*stack)->next)
 		*stack = (*stack)->next;
@@ -56,14 +53,12 @@ int	rotate(t_stack **stack)
 	return (1);
 }
 
-
 int	reverse_rotate(t_stack **stack)
 {
 	t_stack	*temp;
 
 	if (!stack || !*stack || !(*stack)->next)
 		return (0);
-
 	temp = *stack;
 	while (temp->next->next)
 		temp = temp->next;

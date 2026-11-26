@@ -6,7 +6,7 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 12:33:46 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 22:14:17 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:42:26 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int		parse_arguments(int argc, char **argv, t_stack **stack_a, int i);
 int		parse_number(char *str, int *result);
 int		is_duplicate(t_stack *stack, int value);
 
-
 // Stack basic operations
 int		add_back(t_stack **stack, t_stack **last, int value);
 int		push(t_stack **src, t_stack **dst);
@@ -86,7 +85,6 @@ void	rr(t_stack **a, t_stack **b, t_config *config);
 void	rra(t_stack **a, t_config *config);
 void	rrb(t_stack **b, t_config *config);
 void	rrr(t_stack **a, t_stack **b, t_config *config);
-
 
 // Sorting functions
 double	compute_disorder(t_stack *stack);

@@ -6,12 +6,11 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/23 19:44:50 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 19:19:52 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:36:10 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
 
 static int	add_token(t_stack **stack, t_stack **last, char *tok, int *size)
 {
@@ -89,7 +88,6 @@ int	parse_arguments(int argc, char **argv, t_stack **stack, int i)
 // 	return (size);
 // }
 
-
 int	parse_number(char *str, int *result)
 {
 	int		sign;
@@ -116,7 +114,6 @@ int	parse_number(char *str, int *result)
 	return (1);
 }
 
-
 int	is_duplicate(t_stack *stack, int value)
 {
 	while (stack)
@@ -127,4 +124,3 @@ int	is_duplicate(t_stack *stack, int value)
 	}
 	return (0);
 }
-

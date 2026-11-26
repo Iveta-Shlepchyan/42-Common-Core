@@ -6,24 +6,20 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/23 15:36:38 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 22:13:03 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:47:04 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static int	target_pos(t_stack *b, int val)
+static int	get_best_pos(t_stack *b, int val)
 {
 	int	i;
 	int	pos;
 	int	best;
-	int	max_pos;
-	int	max_val;
 
 	i = 0;
 	pos = -1;
-	max_pos = 0;
-	max_val = b->value;
 	while (b)
 	{
 		if (b->value < val && (pos == -1 || b->value > best))
@@ -31,16 +27,41 @@ static int	target_pos(t_stack *b, int val)
 			pos = i;
 			best = b->value;
 		}
-		if (b->value > max_val)
+		i++;
+		b = b->next;
+	}
+	return (pos);
+}
+
+static int	get_max_pos(t_stack *b)
+{
+	int	i;
+	int	pos;
+	int	max;
+
+	i = 0;
+	pos = 0;
+	max = b->value;
+	while (b)
+	{
+		if (b->value > max)
 		{
-			max_val = b->value;
-			max_pos = i;
+			max = b->value;
+			pos = i;
 		}
 		i++;
 		b = b->next;
 	}
+	return (pos);
+}
+
+static int	target_pos(t_stack *b, int val)
+{
+	int	pos;
+
+	pos = get_best_pos(b, val);
 	if (pos == -1)
-		return (max_pos);
+		return (get_max_pos(b));
 	return (pos);
 }
 
@@ -65,10 +86,8 @@ void	insertion_sort(t_stack **a, t_stack **b, t_config *config)
 {
 	if (get_stack_size(*a) <= 5)
 		return (sort_small_input(a, b, config));
-
 	if (is_sorted(*a))
 		return ;
-
 	while (*a)
 	{
 		if (*b && (*b)->next)
@@ -79,7 +98,6 @@ void	insertion_sort(t_stack **a, t_stack **b, t_config *config)
 	while (*b)
 		pa(a, b, config);
 }
-
 
 // static int	count_swaps_needed(t_stack *stack_b)
 // {
@@ -105,7 +123,6 @@ void	insertion_sort(t_stack **a, t_stack **b, t_config *config)
 // 	else
 // 		sb(stack_b, config);
 // }
-
 
 // void	insertion_sort(t_stack **stack_a, t_stack **stack_b, t_config *config)
 // {

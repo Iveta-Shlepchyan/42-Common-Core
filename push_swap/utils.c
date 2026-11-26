@@ -6,10 +6,9 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/26 19:23:20 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 20:15:57 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:49:11 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "push_swap.h"
 
@@ -37,7 +36,7 @@ void	free_stack(t_stack *stack)
 	}
 }
 
-int is_sorted(t_stack *stack)
+int	is_sorted(t_stack *stack)
 {
 	while (stack && stack->next)
 	{

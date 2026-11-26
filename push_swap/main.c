@@ -6,7 +6,7 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/20 12:33:55 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 20:27:32 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:35:08 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(int argc, char **argv)
 
 	if (argc < 2)
 		return (0);
-
 	stack_a = NULL;
 	stack_b = NULL;
 	ft_bzero(&config, sizeof(config));
@@ -31,12 +30,10 @@ int	main(int argc, char **argv)
 	if (!config.size)
 		return (free_stack(stack_a), 1);
 	config.disorder = compute_disorder(stack_a);
-
 	sort(&stack_a, &stack_b, &config);
 	print_benchmark(&config, config.disorder);
 	free_stack(stack_a);
 	free_stack(stack_b);
-
 	return (0);
 }
 
@@ -63,7 +60,6 @@ void	sort(t_stack **stack_a, t_stack **stack_b, t_config *config)
 			radix_sort(stack_a, stack_b, config);
 	}
 }
-
 
 void	print_stack(t_stack *stack)
 {

@@ -6,7 +6,7 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/26 19:36:17 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 20:18:03 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:47:34 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,3 @@ void	sort_small_input(t_stack **a, t_stack **b, t_config *config)
 	while (*b)
 		pa(a, b, config);
 }
-

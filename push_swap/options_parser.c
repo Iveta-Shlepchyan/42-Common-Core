@@ -6,12 +6,11 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/26 19:20:09 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/11/26 20:41:06 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/26 22:41:58 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
 
 static int	is_blank(const char *s)
 {
@@ -27,7 +26,6 @@ int	parse_options(int argc, char **argv, t_config *config, int *i)
 	config->strategy = ADAPTIVE;
 	if (is_blank(argv[1]))
 		exit(0);
-
 	while (*i < argc && argv[*i][0] == '-' && argv[*i][1] == '-')
 	{
 		if (ft_strncmp(argv[*i], "--simple", 9) == 0)
