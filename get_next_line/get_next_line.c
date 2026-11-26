@@ -6,178 +6,150 @@
 /*   By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/20 20:41:56 by ishlepch          #+#    #+#             */
-/*   Updated: 2026/10/20 20:41:57 by ishlepch         ###   ########.fr       */
+/*   Updated: 2026/11/19 20:16:10 by ishlepch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
-    		// check buffer each char till reach ´/n' 
-    		// store everything up to /n (if founded) into array that we return in the end
-    		// but how do we know what size of array to make ? end with /n if it also does so
-    		// https://www.geeksforgeeks.org/c/input-output-system-calls-c-create-open-close-read-write/
-    		// https://42-cursus.gitbook.io/guide/1-rank-01/get_next_line
-    		// to store use stash - either a static string (char array) super big ?
-    		// that when we reach new line we rewrite the stash starting from zero with the parts that are left and put NULL or smth when we done or only NULL at the start if no other line part is in the buffer
-    		
-    		// or linked list - add each char orrr buffer size char array ? last one restart and make the head free and delete previous ones ?
-    		
-    		/*1.  allocate/resize stash using a helper function (like ft_strjoin) every time read() brings in a new chunk of BUFFER_SIZE.
-2. When you find a newline \n, you extract the line.
-3. You overwrite or move the stash pointer forward to keep only the leftover data for the next call, freeing the old memory. */ 
 #include "get_next_line.h"
-#include <stdlib.h> 
 
-
-
-size_t	ft_strlen(const char *s)
+static char	*fail(char **stash, size_t *len, char *buffer)
 {
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+	free(buffer);
+	free(*stash);
+	*stash = NULL;
+	*len = 0;
+	return (NULL);
 }
 
-void	stash_join(char *stash, char *buffer)
-{
-	size_t	len_st;
-	size_t	len_buf;
-	char	*new_s;
-	int	i;
-
-	//if (!stash && !buffer)
-	//	return (NULL);
-	len_st = ft_strlen(stash);
-	len_buf = ft_strlen(buffer);
-	
-	new_s = malloc(len_st + len_buf + 1);
-	//if (!new_s)
-		//return (NULL);
-		
-	i = 0;
-	while(stash[i])
-	{
-		new_s[i] = stash[i];
-		i++;
-	}
-	while(*buffer)
-	{
-		new_s[i] = *buffer;
-		buffer++;
-		i++;
-	}
-	new_s[i] = '\0';
-	free(stash);
-	stash = new_s;
-}
-
-
-char	*copy_till_nl(char *s, int nl)
-{
-	size_t	i;
-	char	*new_s;
-	
-	i = 0;
-	while (s[i] && s[i] != '\n')
-	{
-		i++;
-	}
-	
-	new_s = malloc(i + 1 + nl);
-	if (!new_s)
-		return (NULL);
-		
-	i = 0;
-	while (s[i] && s[i] != '\n')
-	{
-		new_s[i] = s[i];
-		i++;
-	}
-	if	(nl)
-		new_s[i++] = '\n';
-	new_s[i] = '\0';
-	return (new_s);
-}
-
-void	clean_stash(char *s)
+static void	clean_stash(char *s, size_t *len)
 {
 	size_t	i;
 	size_t	j;
-	char	*new_s;
-	
+
 	i = 0;
 	while (s[i] && s[i] != '\n')
-	{
 		i++;
-	}
-	i++;
+	if (s[i] == '\n')
+		i++;
 	j = 0;
 	while (s[i])
-	{
-		j++;
-		i++;
-	}
-	
-	new_s = malloc(j + 1);
-	//if (!new_s)
-		//return (NULL);
-	if (new_s)
-	{	
-		i -= j;
-		j = 0;
-		while(s[i])
-		{
-			new_s[j] = s[i];
-			i++;
-			j++;
-		}
-		new_s[j] = '\0';
-		free(s);
-		s = new_s;
-	}
+		s[j++] = s[i++];
+	s[j] = '\0';
+	*len = j;
 }
 
-
-
-int	check_line_end(char *str)
+static char	*extract_line(char **stash, size_t *len, char *buffer, int nl)
 {
-	int	i;
+	char	*line;
 
-	i = 0;
-	while(str[i])
+	line = copy_till(*stash, nl);
+	if (nl)
+		clean_stash(*stash, len);
+	else
 	{
-		if (str[i] == '\n')
-			return (1);
-		i++;
+		free(*stash);
+		*stash = NULL;
+		*len = 0;
 	}
-	return (0);
-}
-
-
-char *get_next_line(int fd)
-{
-	char		buffer[BUFFER_SIZE];
-	static char	*stash;
-	char		*line;
-	
-	int		bytes_read;
-
-	if(!stash)
-		stash = "";
-
-	while ((bytes_read = read(fd, buffer, sizeof(buffer) - 1) > 0))
-	{
-		buffer[bytes_read] = '\0';
-		stash_join(stash, buffer);
-		if (check_line_end(buffer))
-		{
-			line = copy_till_nl(stash, 1);
-			clean_stash(stash);
-			return (line);
-		}
-	}
-	line = copy_till_nl(stash, 0);
+	free(buffer);
 	return (line);
 }
+
+static char	*get_buffer(int fd)
+{
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
+	return (malloc(BUFFER_SIZE + 1));
+}
+
+char	*get_next_line(int fd)
+{
+	char			*buffer;
+	ssize_t			bytes_read;
+	static char		*stash;
+	static size_t	cap;
+	static size_t	len;
+
+	buffer = get_buffer(fd);
+	if (!buffer)
+		return (NULL);
+	if (check_line_end(stash))
+		return (extract_line(&stash, &len, buffer, 1));
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		stash = stash_join(stash, buffer, &cap, &len);
+		if (!stash)
+			return (fail(&stash, &len, buffer));
+		if (check_line_end(buffer))
+			return (extract_line(&stash, &len, buffer, 1));
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+	}
+	if (bytes_read == 0 && stash && stash[0])
+		return (extract_line(&stash, &len, buffer, 0));
+	return (fail(&stash, &len, buffer));
+}
+
+// char *get_next_line(int fd)
+// {
+// 	char			*buffer;
+// 	char			*line;
+// 	ssize_t 		bytes_read;
+// 	static char		*stash;
+// 	static size_t	stash_capacity;
+// 	static size_t 	stash_len;
+
+// 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+//     	return (NULL);
+
+// 	buffer = malloc(BUFFER_SIZE + 1);
+// 	if (!buffer)
+// 		return (NULL);
+
+// 	if (!stash)
+// 	{
+// 		stash_capacity = 32;
+// 		stash_len = 0;
+// 		stash = malloc(stash_capacity);
+// 		if (!stash)
+// 		{
+// 			free(buffer);
+// 			return (NULL);
+// 		}
+// 		stash[0] = '\0';
+// 	}
+
+// 	if (check_line_end(stash))
+// 	{
+// 		line = copy_till(stash, 1);
+// 		clean_stash(stash);
+// 		free(buffer);
+// 		return (line);
+// 	}
+
+// 	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+// 	{
+// 		buffer[bytes_read] = '\0';
+// 		stash_len += bytes_read;
+// 		stash = stash_join(stash, buffer, &stash_capacity, &stash_len);
+// 		if (check_line_end(buffer))
+// 		{
+// 			line = copy_till(stash, 1);
+// 			clean_stash(stash);
+// 			free(buffer);
+// 			return (line);
+// 		}
+// 	}
+
+// 	if (bytes_read == 0 && stash[0])
+// 	{
+// 		line = copy_till(stash, 0);
+// 		free(stash);
+// 		stash = NULL;
+// 		free(buffer);
+// 		return (line);
+// 	}
+// 	free(buffer);
+// 	return (NULL);
+// }
