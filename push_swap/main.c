@@ -41,6 +41,7 @@ void	sort(t_stack **stack_a, t_stack **stack_b, t_config *config)
 {
 	if (config->disorder == 0.0)
 	{
+		print_benchmark(config, config->disorder);
 		free_stack(*stack_a);
 		exit(0);
 	}

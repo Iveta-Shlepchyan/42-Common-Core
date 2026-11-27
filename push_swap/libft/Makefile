@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ishlepch <ishlepch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/06/25 19:45:33 by ishlepch          #+#    #+#              #
-#    Updated: 2026/11/20 17:19:54 by ishlepch         ###   ########.fr        #
+#    Updated: 2026/11/27 20:16:59 by ishlepch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,9 @@ PRINTF_DIR  = ft_printf/
 PRINTF_SRCS = $(addprefix $(PRINTF_DIR), ft_printf.c ft_printf_utils.c  \
 				ft_format_parser.c ft_hex_formatter.c ft_int_formatter.c \
 				ft_char_str_formatter.c ft_pointer_formatter.c)
+				
+GET_NEXT_LINE_SRCS = get_next_line_bonus.c \
+			get_next_line_utils_bonus.c
 
 # Source files
 SRCS    = ft_isascii.c \
@@ -72,7 +75,8 @@ SRCS    = ft_isascii.c \
 	  ft_lstclear.c \
 	  ft_lstiter.c \
 	  ft_lstmap.c \
-	  $(PRINTF_SRCS)
+	  $(PRINTF_SRCS) \
+	  $(GET_NEXT_LINE_SRCS)
 
 # Object files (automatically maps .c to .o)
 OBJS    = $(SRCS:.c=.o)

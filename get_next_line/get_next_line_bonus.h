@@ -35,7 +35,7 @@ typedef struct s_stash
 char	*get_next_line(int fd);
 char	*stash_join(char *stash, char *buffer, size_t *cap, size_t *len);
 char	*copy_till(char *s, int nl);
-int		check_line_end(char *str);
+int	check_line_end(char *str);
 size_t	ft_strlen(const char *s);
 
 #endif

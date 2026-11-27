@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ishlepch <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: ishlepch <ishlepch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/10/08 17:57:52 by ishlepch          #+#    #+#              #
-#    Updated: 2026/11/26 20:03:18 by ishlepch         ###   ########.fr        #
+#    Updated: 2026/11/27 20:53:10 by ishlepch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,34 +21,42 @@ CFLAGS  = -Wall -Wextra -Werror
 RM      = rm -f
 AR      = ar rcs
 
-# Source files
-SRCS    = main.c \
-          stack_operations.c \
-		  simple_sort.c \
-		  med_sort.c \
-		  complex_sort.c \
-		  arguments_parser.c \
-		  options_parser.c \
-		  ops_push_swap.c \
-		  ops_rotate.c \
-		  ops_reverse_rotate.c \
-		  sort_small_input.c \
-		  utils.c \
-		  bench.c
+# Shared source files
+SHARED_SRCS = stack_operations.c \
+              arguments_parser.c \
+              ops_push_swap.c \
+              ops_rotate.c \
+              ops_reverse_rotate.c \
+              utils.c \
+			  simple_sort.c \
+			  med_sort.c \
+			  complex_sort.c \
+			  options_parser.c \
+			  sort_small_input.c \
+			  bench.c 
 
-# Object files (automatically maps .c to .o)
-OBJS    = $(SRCS:.c=.o)
+# Mandatory source files
+SRCS = main.c \
+       $(SHARED_SRCS)
+
+# Bonus source files
+BONUS_SRCS = checker_bonus.c \
+             $(SHARED_SRCS)
+
+# Object files
+OBJS = $(SRCS:.c=.o)
 
 LIBFT_DIR = libft
-LIBFT     = $(LIBFT_DIR)/libft.a
-
+LIBFT = $(LIBFT_DIR)/libft.a
 
 # Default rule
 all: $(NAME)
 
-bonus: all
+# Bonus rule
+bonus: $(LIBFT) $(BONUS_SRCS)
+	$(CC) $(CFLAGS) $(BONUS_SRCS) $(LIBFT) -o checker
 
-# Rules to create the executable
+# Mandatory executable
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
 	

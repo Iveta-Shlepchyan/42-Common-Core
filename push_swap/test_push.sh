@@ -1,35 +1,125 @@
 
+
 #!/bin/bash
 
 run_test()
 {
-    name=$1
-    shift
+    algo=$1
+    name=$2
+    shift 2
+
     echo ""
-    echo "========== $name =========="
-    ./push_swap --bench "$@" > /dev/null
+    echo "========== $algo | $name =========="
+    ./push_swap --bench "$algo" "$@" > /dev/null
 }
 
-# 100 numbers
-run_test "100 - LOW DISORDER" \
-1 0 2 3 4 5 6 7 8 9 80 11 12 13 14 15 16 17 18 79 \
-29 21 22 23 84 25 26 27 28 20 30 31 32 33 34 35 36 37 38 39 \
-40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 \
-60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 19 \
-10 81 82 83 24 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+# Generate patterns
+make_even_odd()
+{
+    n=$1
+    for ((i = 0; i < n; i += 2)); do
+        echo "$i"
+    done
+    for ((i = 1; i < n; i += 2)); do
+        echo "$i"
+    done
+}
 
-run_test "100 - MEDIUM DISORDER" \
-$(seq 0 2 98 | tr '\n' ' ') $(seq 99 -2 1 | tr '\n' ' ')
+make_low_high()
+{
+    n=$1
+    for ((i = 0; i < n / 2; i++)); do
+        echo "$i"
+        echo "$((n - 1 - i))"
+    done
+}
 
-run_test "100 - REVERSED" \
-$(seq 99 -1 0 | tr '\n' ' ')
+make_organ_pipe()
+{
+    n=$1
+    for ((i = 0; i < n / 2; i++)); do
+        echo "$i"
+    done
+    for ((i = n - 1; i >= n / 2; i--)); do
+        echo "$i"
+    done
+}
 
-# 500 numbers
-run_test "500 - LOW DISORDER" \
-1 0 $(seq 2 499 | tr '\n' ' ')
+make_blocks()
+{
+    n=$1
+    block=$2
+    start=0
 
-run_test "500 - MEDIUM DISORDER" \
-$(seq 0 2 498 | tr '\n' ' ') $(seq 499 -2 1 | tr '\n' ' ')
+    while ((start < n)); do
+        end=$((start + block - 1))
+        ((end >= n)) && end=$((n - 1))
 
-run_test "500 - REVERSED" \
-$(seq 499 -1 0 | tr '\n' ' ')
+        for ((i = end; i >= start; i--)); do
+            echo "$i"
+        done
+        start=$((start + block))
+    done
+}
+
+make_nearly_sorted()
+{
+    n=$1
+    arr=($(seq 0 $((n - 1))))
+
+    # A few misplaced elements
+    temp=${arr[0]}
+    arr[0]=${arr[1]}
+    arr[1]=$temp
+
+    temp=${arr[10]}
+    arr[10]=${arr[80]}
+    arr[80]=$temp
+
+    temp=${arr[20]}
+    arr[20]=${arr[90]}
+    arr[90]=$temp
+
+    printf '%s\n' "${arr[@]}"
+}
+
+# Build test arrays
+for n in 100 500; do
+    mapfile -t sorted < <(seq 0 $((n - 1)))
+    mapfile -t reversed < <(seq $((n - 1)) -1 0)
+    mapfile -t even_odd < <(make_even_odd "$n")
+    mapfile -t low_high < <(make_low_high "$n")
+    mapfile -t organ_pipe < <(make_organ_pipe "$n")
+    mapfile -t blocks < <(make_blocks "$n" 10)
+    mapfile -t nearly_sorted < <(make_nearly_sorted "$n")
+    mapfile -t random < <(shuf -i 0-$((n - 1)))
+
+    # Run every algorithm against every pattern
+    for algo in --simple --medium --complex; do
+
+        run_test "$algo" "$n - SORTED" "${sorted[@]}"
+
+        run_test "$algo" "$n - NEARLY SORTED" \
+            "${nearly_sorted[@]}"
+
+        run_test "$algo" "$n - EVEN / ODD" \
+            "${even_odd[@]}"
+
+        run_test "$algo" "$n - LOW / HIGH" \
+            "${low_high[@]}"
+
+        run_test "$algo" "$n - ORGAN PIPE" \
+            "${organ_pipe[@]}"
+
+        run_test "$algo" "$n - REVERSED BLOCKS" \
+            "${blocks[@]}"
+
+        run_test "$algo" "$n - RANDOM" \
+            "${random[@]}"
+
+        run_test "$algo" "$n - REVERSED" \
+            "${reversed[@]}"
+
+    done
+done
+
